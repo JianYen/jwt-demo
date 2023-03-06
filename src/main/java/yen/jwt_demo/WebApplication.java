@@ -11,11 +11,6 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 public class WebApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(WebApplication.class, args);
-    }
-
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -26,5 +21,9 @@ public class WebApplication {
         //系統啟動時將預設假資料塞入mongodb
         userRepository.deleteAll();
         userRepository.saveAll(dataService.getData());
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(WebApplication.class, args);
     }
 }
