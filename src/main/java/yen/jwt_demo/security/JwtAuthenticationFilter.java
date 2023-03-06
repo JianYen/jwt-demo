@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import yen.jwt_demo.model.ResponseResult;
 import yen.jwt_demo.entity.UserEntity;
 import yen.jwt_demo.service.UserService;
+import yen.jwt_demo.util.GsonUtils;
 import yen.jwt_demo.util.JwtUtil;
 
 import javax.servlet.FilterChain;
@@ -42,15 +43,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        Map<String, String> requestMap = null;
-        try {
-            Type type = new TypeToken<Map<String, String>>() {
-            }.getType();
-            String requestString = IOUtils.toString(request.getReader());
-            requestMap = new Gson().fromJson(requestString, type);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+        String requestString = IOUtils.toString(request.getReader());
+        Map<String, String> requestMap = GsonUtils.fromJson(requestString);
+
         String username = requestMap.get("username");
         String password = requestMap.get("password");
         Optional<UserEntity> userEntityOptional = userService.getUserByUsername(username);
@@ -76,19 +71,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         handleResponse(request, response, null, failed);
     }
 
+    /**
+     * 登入失敗跟登入成功處理
+     * @param request
+     * @param response
+     * @param authResult
+     * @param failed
+     * @throws IOException
+     */
     private void handleResponse(HttpServletRequest request, HttpServletResponse response, Authentication authResult, AuthenticationException failed) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ResponseResult responseResult = new ResponseResult();
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
-        Map<String, String> requestMap = null;
-        try {
-            Type type = new TypeToken<Map<String, String>>() {
-            }.getType();
-            String requestString = IOUtils.toString(request.getReader());
-            requestMap = new Gson().fromJson(requestString, type);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+
+        String requestString = IOUtils.toString(request.getReader());
+        Map<String, String> requestMap = GsonUtils.fromJson(requestString);
         Optional<UserEntity> userEntityOptional = userService.getUserByUsername(requestMap.get("username"));
 
         // 處理登入成功請求
