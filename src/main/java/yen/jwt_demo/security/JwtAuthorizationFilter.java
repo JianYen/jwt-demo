@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * JWT驗證
+ */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UserDetailsService userDetailsService;

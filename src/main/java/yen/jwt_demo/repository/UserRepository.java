@@ -9,6 +9,11 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<UserEntity, String> {
 
+    /**
+     * 根據使用者名稱查找資料
+     * @param username
+     * @return Optional<UserEntity>
+     */
     Optional<UserEntity> findByUsername(String username);
 
 }

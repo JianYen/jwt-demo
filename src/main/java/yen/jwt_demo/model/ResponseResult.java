@@ -1,11 +1,11 @@
-package yen.jwt_demo.entity;
+package yen.jwt_demo.model;
 
-public class ResponseEntity {
+public class ResponseResult {
 
-    public ResponseEntity() {
+    public ResponseResult() {
     }
 
-    public ResponseEntity(int status, String msg, Object data) {
+    public ResponseResult(int status, String msg, Object data) {
         this.status = status;
         this.msg = msg;
         this.data = data;

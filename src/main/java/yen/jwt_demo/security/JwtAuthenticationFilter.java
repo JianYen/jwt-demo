@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import yen.jwt_demo.entity.ResponseEntity;
+import yen.jwt_demo.model.ResponseResult;
 import yen.jwt_demo.entity.UserEntity;
 import yen.jwt_demo.service.UserService;
 import yen.jwt_demo.util.JwtUtil;
@@ -26,6 +26,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 登入驗證
+ */
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private UserService userService;
@@ -75,7 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private void handleResponse(HttpServletRequest request, HttpServletResponse response, Authentication authResult, AuthenticationException failed) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity responseEntity = new ResponseEntity();
+        ResponseResult responseResult = new ResponseResult();
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         Map<String, String> requestMap = null;
         try {
@@ -92,9 +95,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if (authResult != null) {
             User user = (User) authResult.getPrincipal();
             String token = JwtUtil.sign(user.getUsername(), user.getPassword());
-            responseEntity.setStatus(HttpStatus.OK.value());
-            responseEntity.setMsg("登入成功");
-            responseEntity.setData("Bearer " + token);
+            responseResult.setStatus(HttpStatus.OK.value());
+            responseResult.setMsg("登入成功");
+            responseResult.setData("Bearer " + token);
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = userEntityOptional.get();
                 userEntity.setToken("Bearer " + token);
@@ -103,7 +106,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 userService.save(userEntity);
             }
             response.setStatus(HttpStatus.OK.value());
-            response.getWriter().write(mapper.writeValueAsString(responseEntity));
+            response.getWriter().write(mapper.writeValueAsString(responseResult));
         } else {// 處理登入失敗請求
             if (userEntityOptional.isPresent()) {
                 UserEntity user = userEntityOptional.get();
@@ -118,11 +121,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     return;
                 }
             }
-            responseEntity.setStatus(HttpStatus.BAD_REQUEST.value());
-            responseEntity.setMsg("使用者名稱或密碼錯誤");
-            responseEntity.setData(null);
+            responseResult.setStatus(HttpStatus.BAD_REQUEST.value());
+            responseResult.setMsg("使用者名稱或密碼錯誤");
+            responseResult.setData(null);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.getWriter().write(mapper.writeValueAsString(responseEntity));
+            response.getWriter().write(mapper.writeValueAsString(responseResult));
         }
     }
 }

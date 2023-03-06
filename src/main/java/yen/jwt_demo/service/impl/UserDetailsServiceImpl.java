@@ -1,4 +1,4 @@
-package yen.jwt_demo.security;
+package yen.jwt_demo.service.impl;
 
 import yen.jwt_demo.entity.UserEntity;
 import yen.jwt_demo.service.UserService;

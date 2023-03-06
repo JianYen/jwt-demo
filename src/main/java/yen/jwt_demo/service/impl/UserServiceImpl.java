@@ -2,7 +2,7 @@ package yen.jwt_demo.service.impl;
 
 import yen.jwt_demo.entity.UserEntity;
 import yen.jwt_demo.repository.UserRepository;
-import yen.jwt_demo.service.Database;
+import yen.jwt_demo.service.DataService;
 import yen.jwt_demo.service.UserService;
 import yen.jwt_demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private Database database;
+    private DataService dataService;
     @Autowired
     private UserRepository userRepository;
 

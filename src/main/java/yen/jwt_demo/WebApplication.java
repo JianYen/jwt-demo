@@ -1,7 +1,7 @@
 package yen.jwt_demo;
 
 import yen.jwt_demo.repository.UserRepository;
-import yen.jwt_demo.service.Database;
+import yen.jwt_demo.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,11 +19,12 @@ public class WebApplication {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private Database database;
+    private DataService dataService;
 
     @PostConstruct
     public void initData(){
         //系統啟動時將預設假資料塞入mongodb
-        userRepository.saveAll(database.getData());
+        userRepository.deleteAll();
+        userRepository.saveAll(dataService.getData());
     }
 }
